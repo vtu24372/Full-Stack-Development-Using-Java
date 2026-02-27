@@ -1,0 +1,9 @@
+package com.oms.ordermanagement.repository;
+
+import com.oms.ordermanagement.model.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long> {
+}

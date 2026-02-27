@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management System</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="theme-toggle">
+        <button id="themeSwitch" class="theme-switch">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-shopping-cart"></i>
+                <span>OrderMaster</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="/" th:classappend="${activePage == 'dashboard'} ? 'active' : ''">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/customers" th:classappend="${activePage == 'customers'} ? 'active' : ''">
+                    <i class="fas fa-users"></i>
+                    <span>Customers</span>
+                </a>
+                <a href="/orders" th:classappend="${activePage == 'orders'} ? 'active' : ''">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Orders</span>
+                </a>
+                <a href="/products" th:classappend="${activePage == 'products'} ? 'active' : ''">
+                    <i class="fas fa-box"></i>
+                    <span>Products</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <div>
+                        <span class="user-name">Admin User</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 th:text="${activePage == 'dashboard' ? 'Dashboard' : 
+                                  activePage == 'customers' ? 'Customer Management' :
+                                  activePage == 'orders' ? 'Order Management' :
+                                  activePage == 'products' ? 'Product Management' : 'Dashboard'}"></h1>
+                    <p>Welcome back, Admin</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div th:if="${activePage == 'dashboard'}">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="stat-details">
+                            <span class="stat-label">Total Orders</span>
+                            <span class="stat-value" th:text="${totalOrders}">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-details">
+                            <span class="stat-label">Total Customers</span>
+                            <span class="stat-value" th:text="${totalCustomers}">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-details">
+                            <span class="stat-label">Total Products</span>
+                            <span class="stat-value" th:text="${totalProducts}">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customers List -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Customers</h3>
+                        <a href="/customers" class="btn-view-all">View All <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="customer : ${customers}" th:if="${customers != null and customers.size() > 0}">
+                                    <td th:text="${customer.id}">1</td>
+                                    <td th:text="${customer.name}">John Doe</td>
+                                    <td th:text="${customer.email}">john@example.com</td>
+                                    <td th:text="${customer.phone}">123-456-7890</td>
+                                </tr>
+                                <tr th:if="${customers == null or customers.size() == 0}">
+                                    <td colspan="4" style="text-align: center;">No customers found</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Products List -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Products</h3>
+                        <a href="/products" class="btn-view-all">View All <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="product : ${products}" th:if="${products != null and products.size() > 0}">
+                                    <td th:text="${product.id}">1</td>
+                                    <td th:text="${product.name}">Product</td>
+                                    <td th:text="'$' + ${product.price}">$99.99</td>
+                                    <td th:text="${product.stock}">10</td>
+                                </tr>
+                                <tr th:if="${products == null or products.size() == 0}">
+                                    <td colspan="4" style="text-align: center;">No products found</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Orders List -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent Orders</h3>
+                        <a href="/orders" class="btn-view-all">View All <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Customer</th>
+                                    <th>Product</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="order : ${orders}" th:if="${orders != null and orders.size() > 0}">
+                                    <td th:text="${order.orderNumber}">ORD-001</td>
+                                    <td th:text="${order.customer != null ? order.customer.name : 'N/A'}">John Doe</td>
+                                    <td th:text="${order.product != null ? order.product.name : 'N/A'}">Product</td>
+                                    <td th:text="'$' + ${order.totalAmount}">$100.00</td>
+                                    <td>
+                                        <span class="status-badge" th:text="${order.status}">PENDING</span>
+                                    </td>
+                                </tr>
+                                <tr th:if="${orders == null or orders.size() == 0}">
+                                    <td colspan="5" style="text-align: center;">No orders found</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customers Page -->
+            <div th:if="${activePage == 'customers'}" class="page-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>All Customers</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>City</th>
+                                    <th>Country</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="customer : ${customers}">
+                                    <td th:text="${customer.id}">1</td>
+                                    <td th:text="${customer.name}">John Doe</td>
+                                    <td th:text="${customer.email}">john@example.com</td>
+                                    <td th:text="${customer.phone}">123-456-7890</td>
+                                    <td th:text="${customer.city}">New York</td>
+                                    <td th:text="${customer.country}">USA</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Page -->
+            <div th:if="${activePage == 'products'}" class="page-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>All Products</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Category</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="product : ${products}">
+                                    <td th:text="${product.id}">1</td>
+                                    <td th:text="${product.name}">Product</td>
+                                    <td th:text="'$' + ${product.price}">$99.99</td>
+                                    <td th:text="${product.stock}">10</td>
+                                    <td th:text="${product.category}">Electronics</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Page -->
+            <div th:if="${activePage == 'orders'}" class="page-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>All Orders</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Customer</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="order : ${orders}">
+                                    <td th:text="${order.orderNumber}">ORD-001</td>
+                                    <td th:text="${order.customer != null ? order.customer.name : 'N/A'}">John Doe</td>
+                                    <td th:text="${order.product != null ? order.product.name : 'N/A'}">Product</td>
+                                    <td th:text="${order.quantity}">1</td>
+                                    <td th:text="'$' + ${order.totalAmount}">$100.00</td>
+                                    <td>
+                                        <span class="status-badge" th:text="${order.status}">PENDING</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/theme.js"></script>
+</body>
+</html>
