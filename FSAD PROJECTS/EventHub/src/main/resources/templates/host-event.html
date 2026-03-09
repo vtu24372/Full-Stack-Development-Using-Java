@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host Event • EventHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0c10;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header - Boxed with | separator */
+        header {
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 12px;
+            padding: 16px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+            color: #4285f4;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .logo h1 span {
+            color: #4285f4;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #9aa4bf;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 8px 0;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #4285f4;
+        }
+
+        .nav-links a.active {
+            color: #4285f4;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #4285f4;
+        }
+
+        .nav-links span.separator {
+            color: #2a2f3a;
+            font-weight: 300;
+        }
+
+        .status-badge {
+            background: #1a1e26;
+            padding: 6px 14px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #2a2f3a;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4285f4;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-text {
+            color: #9aa4bf;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin: 40px 0 30px;
+        }
+
+        .page-header h1 {
+            font-size: 2.2rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: #9aa4bf;
+            font-size: 1.1rem;
+        }
+
+        /* Form Container */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto 50px;
+        }
+
+        .event-form {
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 20px;
+            padding: 40px;
+        }
+
+        /* Form Section */
+        .form-section {
+            margin-bottom: 35px;
+            padding-bottom: 35px;
+            border-bottom: 1px solid #2a2f3a;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .form-section h2 {
+            color: #ffffff;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-section h2 i {
+            color: #4285f4;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #9aa4bf;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .required {
+            color: #f05252;
+            margin-left: 4px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: #0a0c10;
+            border: 1px solid #2a2f3a;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4285f4;
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #3a414c;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234285f4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+        }
+
+        select option {
+            background: #0f1117;
+            color: #ffffff;
+        }
+
+        small {
+            display: block;
+            color: #5f6b7a;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        /* Checkbox */
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #9aa4bf;
+            cursor: pointer;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #4285f4;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn-primary {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #5a95f5;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(66, 133, 244, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #4285f4;
+            border: 2px solid #4285f4;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(66, 133, 244, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 60px;
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 16px;
+            padding: 50px 40px 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .footer-col p {
+            color: #9aa4bf;
+            line-height: 1.6;
+        }
+
+        .footer-col a {
+            color: #9aa4bf;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #4285f4;
+        }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid #2a2f3a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #9aa4bf;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #48bb78;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .form-container {
+                padding: 0 15px;
+            }
+            
+            .event-form {
+                padding: 25px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .form-actions button {
+                width: 100%;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with | separator (exactly like index) -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+                <h1>Event<span>Hub</span></h1>
+            </div>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <span class="separator">|</span>
+                <a href="/events">Events</a>
+                <span class="separator">|</span>
+                <a href="/events/host" class="active">Host</a>
+                <span class="separator">|</span>
+                <a href="/artists">Artists</a>
+            </nav>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span class="status-text">LIVE</span>
+            </div>
+        </header>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Create New Event</h1>
+            <p>Fill in the details below to list your event</p>
+        </div>
+
+        <!-- Host Event Form -->
+        <div class="form-container">
+            <form th:action="@{/events/host}" th:object="${event}" method="post" class="event-form">
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <h2><i class="fas fa-info-circle"></i> Basic Information</h2>
+                    
+                    <div class="form-group">
+                        <label for="title">Event Title <span class="required">*</span></label>
+                        <input type="text" id="title" th:field="*{title}" placeholder="e.g., AR Rahman Live in Chennai" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Category <span class="required">*</span></label>
+                        <select id="category" th:field="*{category}" required>
+                            <option value="">Select Category</option>
+                            <option value="music">Music</option>
+                            <option value="comedy">Comedy</option>
+                            <option value="sports">Sports</option>
+                            <option value="performances">Performances</option>
+                            <option value="workshops">Workshops</option>
+                            <option value="holi">Holi</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description <span class="required">*</span></label>
+                        <textarea id="description" th:field="*{description}" rows="5" placeholder="Describe your event, lineup, special attractions..." required></textarea>
+                    </div>
+                </div>
+
+                <!-- Date & Location -->
+                <div class="form-section">
+                    <h2><i class="fas fa-calendar-alt"></i> Date & Location</h2>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="eventDate">Date & Time <span class="required">*</span></label>
+                            <input type="datetime-local" id="eventDate" th:field="*{eventDate}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="venue">Venue <span class="required">*</span></label>
+                            <input type="text" id="venue" th:field="*{venue}" placeholder="e.g., Jawaharlal Nehru Stadium, Chennai" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tickets & Media -->
+                <div class="form-section">
+                    <h2><i class="fas fa-ticket-alt"></i> Tickets & Media</h2>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="price">Price <span class="required">*</span></label>
+                            <input type="text" id="price" th:field="*{price}" placeholder="e.g., ₹2,499 onwards or Free" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="capacity">Capacity</label>
+                            <input type="number" id="capacity" th:field="*{capacity}" placeholder="e.g., 5000">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="imageUrl">Image URL</label>
+                        <input type="url" id="imageUrl" th:field="*{imageUrl}" placeholder="https://... (leave empty for default)">
+                        <small>Use high-quality event image</small>
+                    </div>
+                </div>
+
+                <!-- Contact -->
+                <div class="form-section">
+                    <h2><i class="fas fa-envelope"></i> Contact Information</h2>
+
+                    <div class="form-group">
+                        <label for="contactEmail">Contact Email <span class="required">*</span></label>
+                        <input type="email" id="contactEmail" th:field="*{contactEmail}" placeholder="organizer@example.com" required>
+                    </div>
+                </div>
+
+                <!-- Terms -->
+                <div class="form-section">
+                    <label class="checkbox-label">
+                        <input type="checkbox" required>
+                        <span>I confirm that all information provided is accurate</span>
+                    </label>
+                </div>
+
+                <!-- Submit -->
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="window.location.href='/'">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-plus-circle"></i> Create Event
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h4>EventHub</h4>
+                    <p>Real-time event platform for Chennai. Discover, host, and register for events seamlessly.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="/">Home</a>
+                    <a href="/events">Events</a>
+                    <a href="/events/host">Host Event</a>
+                    <a href="/artists">Artists</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <div class="social">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 EventHub. All rights reserved.</p>
+                <div class="status">
+                    <i class="fas fa-wifi"></i> Connected
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

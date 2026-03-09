@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artists • EventHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0c10;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header - Boxed with | separator */
+        header {
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 12px;
+            padding: 16px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+            color: #4285f4;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .logo h1 span {
+            color: #4285f4;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #9aa4bf;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 8px 0;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #4285f4;
+        }
+
+        .nav-links a.active {
+            color: #4285f4;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #4285f4;
+        }
+
+        .nav-links span.separator {
+            color: #2a2f3a;
+            font-weight: 300;
+        }
+
+        .status-badge {
+            background: #1a1e26;
+            padding: 6px 14px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #2a2f3a;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4285f4;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-text {
+            color: #9aa4bf;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin: 40px 0 50px;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .page-header h1 i {
+            color: #4285f4;
+            margin-right: 10px;
+        }
+
+        .page-header p {
+            color: #9aa4bf;
+            font-size: 1.1rem;
+        }
+
+        /* Artists Grid */
+        .artists-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .artist-card {
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .artist-card:hover {
+            border-color: #4285f4;
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px -10px rgba(66, 133, 244, 0.3);
+        }
+
+        .artist-card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-bottom: 1px solid #2a2f3a;
+            transition: transform 0.3s ease;
+        }
+
+        .artist-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .artist-card .artist-info {
+            padding: 25px 20px;
+        }
+
+        .artist-card h3 {
+            color: #ffffff;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .artist-card .artist-genre {
+            color: #9aa4bf;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .artist-stats {
+            display: inline-block;
+            background: rgba(66, 133, 244, 0.1);
+            color: #4285f4;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid rgba(66, 133, 244, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 60px;
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 16px;
+            padding: 50px 40px 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .footer-col p {
+            color: #9aa4bf;
+            line-height: 1.6;
+        }
+
+        .footer-col a {
+            color: #9aa4bf;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #4285f4;
+        }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid #2a2f3a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #9aa4bf;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #48bb78;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .artists-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .artists-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .artists-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with | separator (exactly like index) -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+                <h1>Event<span>Hub</span></h1>
+            </div>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <span class="separator">|</span>
+                <a href="/events">Events</a>
+                <span class="separator">|</span>
+                <a href="/events/host">Host</a>
+                <span class="separator">|</span>
+                <a href="/artists" class="active">Artists</a>
+            </nav>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span class="status-text">LIVE</span>
+            </div>
+        </header>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-star"></i> Popular Artists</h1>
+            <p>Discover upcoming events from your favorite artists</p>
+        </div>
+
+        <!-- Artists Grid -->
+        <div class="artists-grid">
+            <!-- AR Rahman -->
+            <div class="artist-card" onclick="window.location.href='/artist/1'">
+                <img src="https://i0.wp.com/rahmaniac.com/wp-content/uploads/2024/03/Print_Interview_2005-41.jpg?fit=800%2C500&ssl=1" alt="AR Rahman">
+                <div class="artist-info">
+                    <h3>AR Rahman</h3>
+                    <p class="artist-genre">Music Director • Playback Singer</p>
+                    <span class="artist-stats">8 upcoming events</span>
+                </div>
+            </div>
+
+            <!-- Anirudh -->
+            <div class="artist-card" onclick="window.location.href='/artist/2'">
+                <img src="https://www.cinejosh.com/newsimg/newsmainimg/anirudh-ravichander_b_2801260806.jpg" alt="Anirudh">
+                <div class="artist-info">
+                    <h3>Anirudh Ravichander</h3>
+                    <p class="artist-genre">Music Composer • Singer</p>
+                    <span class="artist-stats">6 upcoming events</span>
+                </div>
+            </div>
+
+            <!-- Dua Lipa -->
+            <div class="artist-card" onclick="window.location.href='/artist/3'">
+                <img src="https://www.billboard.com/wp-content/uploads/2024/10/Dua-Lipa-cr-Elizabeth-Miranda-press-2024-billboard-1548.jpg" alt="Dua Lipa">
+                <div class="artist-info">
+                    <h3>Dua Lipa</h3>
+                    <p class="artist-genre">International Pop Star</p>
+                    <span class="artist-stats">4 upcoming events</span>
+                </div>
+            </div>
+
+            <!-- Madison Beer -->
+            <div class="artist-card" onclick="window.location.href='/artist/4'">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuqKFqJS9y2ipy29SMkv1ajphrdeIbGfY8Yw&s" alt="Madison Beer">
+                <div class="artist-info">
+                    <h3>Madison Beer</h3>
+                    <p class="artist-genre">Singer • Songwriter</p>
+                    <span class="artist-stats">5 upcoming events</span>
+                </div>
+            </div>
+
+            <!-- Ed Sheeran -->
+            <div class="artist-card" onclick="window.location.href='/artist/5'">
+                <img src="https://m.media-amazon.com/images/M/MV5BMjE5MjU3MjE5OV5BMl5BanBnXkFtZTgwMTE1MzA2NzE@._V1_.jpg" alt="Ed Sheeran">
+                <div class="artist-info">
+                    <h3>Ed Sheeran</h3>
+                    <p class="artist-genre">International Singer • Songwriter</p>
+                    <span class="artist-stats">3 upcoming events</span>
+                </div>
+            </div>
+
+            <!-- Hiphop Tamizha -->
+            <div class="artist-card" onclick="window.location.href='/artist/6'">
+                <img src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=300" alt="Hiphop Tamizha">
+                <div class="artist-info">
+                    <h3>Hiphop Tamizha</h3>
+                    <p class="artist-genre">Rapper • Music Composer</p>
+                    <span class="artist-stats">7 upcoming events</span>
+                </div>
+            </div>
+
+            <!-- Russell Peters -->
+            <div class="artist-card" onclick="window.location.href='/artist/7'">
+                <img src="https://images.unsplash.com/photo-1527224857830-43a7acc85260?w=300" alt="Russell Peters">
+                <div class="artist-info">
+                    <h3>Russell Peters</h3>
+                    <p class="artist-genre">Comedian</p>
+                    <span class="artist-stats">3 upcoming events</span>
+                </div>
+            </div>
+
+            <!-- Zakir Khan -->
+            <div class="artist-card" onclick="window.location.href='/artist/8'">
+                <img src="https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=300" alt="Zakir Khan">
+                <div class="artist-info">
+                    <h3>Zakir Khan</h3>
+                    <p class="artist-genre">Stand-up Comedian</p>
+                    <span class="artist-stats">4 upcoming events</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h4>EventHub</h4>
+                    <p>Real-time event platform for Chennai. Discover, host, and register for events seamlessly.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="/">Home</a>
+                    <a href="/events">Events</a>
+                    <a href="/events/host">Host Event</a>
+                    <a href="/artists">Artists</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <div class="social">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 EventHub. All rights reserved.</p>
+                <div class="status">
+                    <i class="fas fa-wifi"></i> Connected
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

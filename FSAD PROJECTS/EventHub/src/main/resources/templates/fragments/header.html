@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' • EventHub'">EventHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body th:fragment="header">
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+                <h1>Event<span>Hub</span></h1>
+            </div>
+            <nav class="nav-links">
+                <a href="/" th:classappend="${#httpServletRequest.requestURI == '/' ? 'active' : ''}">Home</a>
+                <a href="/events" th:classappend="${#httpServletRequest.requestURI.startsWith('/events') ? 'active' : ''}">Events</a>
+                <a href="/events/host" th:classappend="${#httpServletRequest.requestURI == '/events/host' ? 'active' : ''}">Host</a>
+                <a href="/artists" th:classappend="${#httpServletRequest.requestURI == '/artists' ? 'active' : ''}">Artists</a>
+            </nav>
+            <div class="header-right">
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    <span class="status-text">LIVE</span>
+                </div>
+            </div>
+        </header>
+    </div>
+</body>
+</html>

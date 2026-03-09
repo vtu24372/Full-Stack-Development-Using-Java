@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventHub • Chennai Events</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0c10;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header - Boxed with | separator */
+        header {
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 12px;
+            padding: 16px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+            color: #4285f4;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .logo h1 span {
+            color: #4285f4;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: #9aa4bf;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 8px 0;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #4285f4;
+        }
+
+        .nav-links a.active {
+            color: #4285f4;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #4285f4;
+        }
+
+        .nav-links span.separator {
+            color: #2a2f3a;
+            font-weight: 300;
+        }
+
+        .status-badge {
+            background: #1a1e26;
+            padding: 6px 14px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #2a2f3a;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4285f4;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-text {
+            color: #9aa4bf;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Hero Section with Image */
+        .hero {
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 20px;
+            padding: 50px;
+            margin-bottom: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: 2.8rem;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .hero-content h1 span {
+            color: #4285f4;
+        }
+
+        .hero-content p {
+            color: #9aa4bf;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #5a95f5;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(66, 133, 244, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #4285f4;
+            border: 2px solid #4285f4;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(66, 133, 244, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 2px solid #2a2f3a;
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Categories Section - Boxed Style */
+        .categories-section {
+            margin: 50px 0;
+        }
+
+        .categories-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+        }
+
+        .category-card {
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 12px;
+            padding: 25px 15px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .category-card:hover {
+            border-color: #4285f4;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(66, 133, 244, 0.2);
+        }
+
+        .category-card i {
+            font-size: 2.2rem;
+            color: #4285f4;
+            margin-bottom: 12px;
+        }
+
+        .category-card span {
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 500;
+            display: block;
+        }
+
+        /* Filter Row */
+        .filter-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+
+        .chip {
+            background: #1a1e26;
+            border: 1px solid #2a2f3a;
+            border-radius: 30px;
+            padding: 10px 20px;
+            color: #9aa4bf;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chip:hover {
+            background: #2a2f3a;
+            color: #ffffff;
+        }
+
+        .chip.active {
+            background: #4285f4;
+            color: white;
+            border-color: #4285f4;
+        }
+
+        /* Featured Events Section */
+        .featured-section {
+            margin: 50px 0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
+            color: #ffffff;
+        }
+
+        .view-link {
+            color: #4285f4;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: gap 0.2s;
+        }
+
+        .view-link:hover {
+            gap: 12px;
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .event-card {
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .event-card:hover {
+            border-color: #4285f4;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(66, 133, 244, 0.2);
+        }
+
+        .event-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #2a2f3a;
+        }
+
+        .event-info {
+            padding: 20px;
+        }
+
+        .event-date {
+            color: #4285f4;
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .event-info h3 {
+            color: #ffffff;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .venue {
+            color: #9aa4bf;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            color: #4285f4;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #4285f4, #5a95f5);
+            border-radius: 20px;
+            padding: 60px;
+            text-align: center;
+            margin: 60px 0;
+        }
+
+        .cta-content h2 {
+            color: white;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+
+        .cta-content p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .cta-content .btn-primary {
+            background: white;
+            color: #4285f4;
+            font-size: 1.1rem;
+            padding: 16px 40px;
+            border: none;
+        }
+
+        .cta-content .btn-primary:hover {
+            background: #f0f0f0;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 60px;
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 16px;
+            padding: 50px 40px 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .footer-col p {
+            color: #9aa4bf;
+            line-height: 1.6;
+        }
+
+        .footer-col a {
+            color: #9aa4bf;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #4285f4;
+        }
+
+        .social {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social a {
+            width: 40px;
+            height: 40px;
+            background: #1a1e26;
+            border: 1px solid #2a2f3a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .social a:hover {
+            background: #4285f4;
+        }
+
+        .social i {
+            color: #9aa4bf;
+            font-size: 1.2rem;
+        }
+
+        .social a:hover i {
+            color: white;
+        }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid #2a2f3a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #9aa4bf;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #48bb78;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #9aa4bf;
+            background: #0f1117;
+            border-radius: 12px;
+            border: 1px solid #2a2f3a;
+            grid-column: 1 / -1;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .categories-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .featured-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero {
+                grid-template-columns: 1fr;
+                padding: 30px;
+            }
+            
+            .hero-content {
+                text-align: center;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with box and | separator -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+                <h1>Event<span>Hub</span></h1>
+            </div>
+            <nav class="nav-links">
+                <a href="/" class="active">Home</a>
+                <span class="separator">|</span>
+                <a href="/events">Events</a>
+                <span class="separator">|</span>
+                <a href="/events/host">Host</a>
+                <span class="separator">|</span>
+                <a href="/artists">Artists</a>
+            </nav>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span class="status-text">LIVE</span>
+            </div>
+        </header>
+
+        <!-- Hero Section with Image -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Discover Amazing<br><span>Events in Chennai</span></h1>
+                <p>Create, discover, and register for events seamlessly. Real-time sync across all devices.</p>
+                <div class="hero-buttons">
+                    <a href="/events" class="btn-primary">
+                        <i class="fas fa-ticket-alt"></i> Find Events
+                    </a>
+                    <a href="/events/host" class="btn-secondary">
+                        <i class="fas fa-plus-circle"></i> Host Event
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600" alt="Event">
+            </div>
+        </section>
+
+        <!-- Categories Section - Boxed -->
+        <section class="categories-section">
+            <h2>Explore Categories</h2>
+            <div class="categories-grid">
+                <a href="/events/category/music" class="category-card">
+                    <i class="fas fa-music"></i>
+                    <span>Music</span>
+                </a>
+                <a href="/events/category/comedy" class="category-card">
+                    <i class="fas fa-microphone"></i>
+                    <span>Comedy</span>
+                </a>
+                <a href="/events/category/sports" class="category-card">
+                    <i class="fas fa-futbol"></i>
+                    <span>Sports</span>
+                </a>
+                <a href="/events/category/performances" class="category-card">
+                    <i class="fas fa-mask"></i>
+                    <span>Performances</span>
+                </a>
+                <a href="/events?category=workshops" class="category-card">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>Workshops</span>
+                </a>
+                <a href="/events?category=holi" class="category-card">
+                    <i class="fas fa-palette"></i>
+                    <span>Holi</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Filter Chips -->
+        <div class="filter-row">
+            <span class="chip active">All</span>
+            <span class="chip">Today</span>
+            <span class="chip">Tomorrow</span>
+            <span class="chip">This Weekend</span>
+            <span class="chip">Free</span>
+            <span class="chip">Under ₹500</span>
+            <span class="chip">Under ₹1000</span>
+        </div>
+
+        <!-- Featured Events with Photos -->
+        <section class="featured-section">
+            <div class="section-header">
+                <h2>Featured Events</h2>
+                <a href="/events" class="view-link">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="featured-grid" th:if="${not #lists.isEmpty(featuredEvents)}">
+                <div class="event-card" th:each="event : ${featuredEvents}" th:onclick="'window.location.href=\'/events/' + ${event.id} + '\''">
+                    <img th:src="${event.imageUrl}" th:alt="${event.title}">
+                    <div class="event-info">
+                        <span class="event-date" th:text="${#temporals.format(event.eventDate, 'EEE, d MMM • h:mm a')}"></span>
+                        <h3 th:text="${event.title}"></h3>
+                        <p class="venue" th:text="${event.venue}"></p>
+                        <p class="price" th:text="${event.price}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="loading" th:if="${#lists.isEmpty(featuredEvents)}">
+                <i class="fas fa-spinner fa-spin"></i> Loading events...
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2>Ready to host your event?</h2>
+                <p>Join thousands of organizers on EventHub</p>
+                <a href="/events/host" class="btn-primary">Get Started</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h4>EventHub</h4>
+                    <p>Real-time event platform for Chennai. Discover, host, and register for events seamlessly.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="/">Home</a>
+                    <a href="/events">Events</a>
+                    <a href="/events/host">Host Event</a>
+                    <a href="/artists">Artists</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Categories</h4>
+                    <a href="/events/category/music">Music</a>
+                    <a href="/events/category/comedy">Comedy</a>
+                    <a href="/events/category/sports">Sports</a>
+                    <a href="/events/category/performances">Performances</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <div class="social">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 EventHub. All rights reserved.</p>
+                <div class="status">
+                    <i class="fas fa-wifi"></i> Connected
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Details • EventHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0c10;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header - Boxed with | separator */
+        header {
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 12px;
+            padding: 16px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+            color: #4285f4;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .logo h1 span {
+            color: #4285f4;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #9aa4bf;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 8px 0;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #4285f4;
+        }
+
+        .nav-links a.active {
+            color: #4285f4;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #4285f4;
+        }
+
+        .nav-links span.separator {
+            color: #2a2f3a;
+            font-weight: 300;
+        }
+
+        .status-badge {
+            background: #1a1e26;
+            padding: 6px 14px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #2a2f3a;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4285f4;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-text {
+            color: #9aa4bf;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Artist Details Container */
+        .artist-details-container {
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 30px 0;
+        }
+
+        /* Artist Cover */
+        .artist-cover {
+            position: relative;
+            height: 350px;
+            overflow: hidden;
+        }
+
+        .artist-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .artist-cover-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, #0f1117, transparent);
+            padding: 40px;
+        }
+
+        .artist-cover-overlay h1 {
+            color: #ffffff;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .artist-cover-overlay p {
+            color: #9aa4bf;
+            font-size: 1.2rem;
+        }
+
+        /* Artist Bio Section */
+        .artist-bio-section {
+            padding: 40px;
+            border-bottom: 1px solid #2a2f3a;
+        }
+
+        .artist-bio-section h3 {
+            color: #ffffff;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .artist-bio-section h3 i {
+            color: #4285f4;
+        }
+
+        .artist-bio-section p {
+            color: #9aa4bf;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        /* Events Section */
+        .events-section {
+            padding: 40px;
+        }
+
+        .events-section h3 {
+            color: #ffffff;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .events-section h3 i {
+            color: #4285f4;
+        }
+
+        /* Event Card Vertical */
+        .event-card-vertical {
+            background: #1a1e26;
+            border: 1px solid #2a2f3a;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            gap: 25px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .event-card-vertical:hover {
+            border-color: #4285f4;
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(66, 133, 244, 0.2);
+        }
+
+        .event-card-vertical img {
+            width: 220px;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .event-card-vertical .event-details {
+            padding: 25px 25px 25px 0;
+            flex: 1;
+        }
+
+        .event-date {
+            color: #4285f4;
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .event-card-vertical h3 {
+            color: #ffffff;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .event-venue {
+            color: #9aa4bf;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .event-meta {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 15px;
+        }
+
+        .event-price {
+            color: #4285f4;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .book-small {
+            background: transparent;
+            border: 1px solid #4285f4;
+            color: #4285f4;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .book-small:hover {
+            background: #4285f4;
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 60px;
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 16px;
+            padding: 50px 40px 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .footer-col p {
+            color: #9aa4bf;
+            line-height: 1.6;
+        }
+
+        .footer-col a {
+            color: #9aa4bf;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #4285f4;
+        }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid #2a2f3a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #9aa4bf;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #48bb78;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .artist-cover-overlay h1 {
+                font-size: 2rem;
+            }
+            
+            .event-card-vertical {
+                flex-direction: column;
+            }
+            
+            .event-card-vertical img {
+                width: 100%;
+                height: 200px;
+            }
+            
+            .event-card-vertical .event-details {
+                padding: 20px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with | separator (exactly like index) -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+                <h1>Event<span>Hub</span></h1>
+            </div>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <span class="separator">|</span>
+                <a href="/events">Events</a>
+                <span class="separator">|</span>
+                <a href="/events/host">Host</a>
+                <span class="separator">|</span>
+                <a href="/artists">Artists</a>
+            </nav>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span class="status-text">LIVE</span>
+            </div>
+        </header>
+
+        <!-- Artist Details Container -->
+        <div class="artist-details-container" th:if="${artistId == 1}">
+            <!-- Artist Cover -->
+            <div class="artist-cover">
+                <img src="https://i0.wp.com/rahmaniac.com/wp-content/uploads/2024/03/Print_Interview_2005-41.jpg?fit=800%2C500&ssl=1" alt="AR Rahman">
+                <div class="artist-cover-overlay">
+                    <h1>AR Rahman</h1>
+                    <p>Music Director • Playback Singer</p>
+                </div>
+            </div>
+            
+            <!-- Artist Bio -->
+            <div class="artist-bio-section">
+                <h3><i class="fas fa-info-circle"></i> About</h3>
+                <p>Allah Rakha Rahman is an Indian music composer, record producer, singer, and songwriter. His works are noted for integrating Indian classical music with electronic music, world music and traditional orchestral arrangements. He has won numerous awards including 6 National Film Awards, 2 Academy Awards, and 2 Grammy Awards.</p>
+            </div>
+            
+            <!-- Upcoming Events -->
+            <div class="events-section">
+                <h3><i class="fas fa-calendar-alt"></i> Upcoming Events</h3>
+                
+                <!-- Event Card 1 -->
+                <div class="event-card-vertical" onclick="window.location.href='/events/1'">
+                    <img src="https://i0.wp.com/rahmaniac.com/wp-content/uploads/2024/03/Print_Interview_2005-41.jpg?fit=800%2C500&ssl=1" alt="AR Rahman">
+                    <div class="event-details">
+                        <span class="event-date">Sat, 15 Mar 2026 • 7:00 PM</span>
+                        <h3>AR Rahman Live in Chennai</h3>
+                        <p class="event-venue">Jawaharlal Nehru Stadium, Chennai</p>
+                        <div class="event-meta">
+                            <span class="event-price">₹2,499 onwards</span>
+                        </div>
+                        <button class="book-small" onclick="event.stopPropagation(); window.location.href='/register?eventId=1'">Book Tickets</button>
+                    </div>
+                </div>
+
+                <!-- Event Card 2 -->
+                <div class="event-card-vertical" onclick="window.location.href='/events/7'">
+                    <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400" alt="AR Rahman">
+                    <div class="event-details">
+                        <span class="event-date">Sun, 16 Mar 2026 • 6:30 PM</span>
+                        <h3>AR Rahman Symphony</h3>
+                        <p class="event-venue">Music Academy, Chennai</p>
+                        <div class="event-meta">
+                            <span class="event-price">₹1,799 onwards</span>
+                        </div>
+                        <button class="book-small" onclick="event.stopPropagation(); window.location.href='/register?eventId=7'">Book Tickets</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h4>EventHub</h4>
+                    <p>Real-time event platform for Chennai. Discover, host, and register for events seamlessly.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="/">Home</a>
+                    <a href="/events">Events</a>
+                    <a href="/events/host">Host Event</a>
+                    <a href="/artists">Artists</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <div class="social">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 EventHub. All rights reserved.</p>
+                <div class="status">
+                    <i class="fas fa-wifi"></i> Connected
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

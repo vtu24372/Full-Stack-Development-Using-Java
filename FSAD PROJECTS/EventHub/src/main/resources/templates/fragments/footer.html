@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <footer th:fragment="footer">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>EventHub</h4>
+                <p>Real-time event platform for Chennai</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <a href="/">Home</a>
+                <a href="/events">Events</a>
+                <a href="/events/host">Host Event</a>
+                <a href="/artists">Artists</a>
+            </div>
+            <div class="footer-col">
+                <h4>Categories</h4>
+                <a href="/events/category/music">Music</a>
+                <a href="/events/category/comedy">Comedy</a>
+                <a href="/events/category/sports">Sports</a>
+                <a href="/events/category/performances">Performances</a>
+            </div>
+            <div class="footer-col">
+                <h4>Connect</h4>
+                <div class="social">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 EventHub. All rights reserved.</p>
+            <div class="status" id="connectionStatus">
+                <i class="fas fa-wifi"></i> Connected
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

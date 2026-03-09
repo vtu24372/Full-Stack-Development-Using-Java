@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Created • EventHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0c10;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header - Boxed with | separator */
+        header {
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 12px;
+            padding: 16px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+            color: #4285f4;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .logo h1 span {
+            color: #4285f4;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #9aa4bf;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 8px 0;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #4285f4;
+        }
+
+        .nav-links a.active {
+            color: #4285f4;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #4285f4;
+        }
+
+        .nav-links span.separator {
+            color: #2a2f3a;
+            font-weight: 300;
+        }
+
+        .status-badge {
+            background: #1a1e26;
+            padding: 6px 14px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #2a2f3a;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4285f4;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-text {
+            color: #9aa4bf;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Confirmation Box */
+        .confirmation-box {
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 20px;
+            padding: 50px;
+            margin: 40px auto;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            color: #48bb78;
+            margin-bottom: 20px;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .confirmation-box h1 {
+            color: #ffffff;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .confirmation-message {
+            color: #9aa4bf;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        /* Details Card */
+        .details-card {
+            background: #1a1e26;
+            border: 1px solid #2a2f3a;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .details-card p {
+            color: #9aa4bf;
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        .details-card strong {
+            color: #4285f4;
+            font-weight: 600;
+        }
+
+        .details-card input {
+            width: 100%;
+            padding: 12px;
+            background: #0a0c10;
+            border: 1px solid #2a2f3a;
+            border-radius: 8px;
+            color: #4285f4;
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        .details-card input:focus {
+            outline: none;
+            border-color: #4285f4;
+        }
+
+        /* Share Section */
+        .share-section {
+            margin: 30px 0;
+            padding: 20px;
+            border-top: 1px solid #2a2f3a;
+            border-bottom: 1px solid #2a2f3a;
+        }
+
+        .share-section h3 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .share-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .share-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .share-link:hover {
+            transform: translateY(-5px);
+            filter: brightness(1.1);
+        }
+
+        .share-link.twitter {
+            background: #1DA1F2;
+        }
+
+        .share-link.whatsapp {
+            background: #25D366;
+        }
+
+        .share-link.facebook {
+            background: #4267B2;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .btn-primary {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #5a95f5;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(66, 133, 244, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #4285f4;
+            border: 2px solid #4285f4;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(66, 133, 244, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 60px;
+            background: #0f1117;
+            border: 1px solid #2a2f3a;
+            border-radius: 16px;
+            padding: 50px 40px 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .footer-col p {
+            color: #9aa4bf;
+            line-height: 1.6;
+        }
+
+        .footer-col a {
+            color: #9aa4bf;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #4285f4;
+        }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid #2a2f3a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #9aa4bf;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #48bb78;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .confirmation-box {
+                padding: 30px 20px;
+            }
+            
+            .confirmation-box h1 {
+                font-size: 1.8rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons a {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .share-links {
+                gap: 10px;
+            }
+            
+            .share-link {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with | separator (exactly like index) -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+                <h1>Event<span>Hub</span></h1>
+            </div>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <span class="separator">|</span>
+                <a href="/events">Events</a>
+                <span class="separator">|</span>
+                <a href="/events/host" class="active">Host</a>
+                <span class="separator">|</span>
+                <a href="/artists">Artists</a>
+            </nav>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span class="status-text">LIVE</span>
+            </div>
+        </header>
+
+        <!-- Confirmation Box -->
+        <div class="confirmation-box" th:object="${event}">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            
+            <h1>Event Created Successfully!</h1>
+            <p class="confirmation-message">Your event is now live and visible to attendees</p>
+
+            <!-- Event Details -->
+            <div class="details-card" th:if="${event != null}">
+                <p><strong>Event:</strong> <span th:text="*{title}"></span></p>
+                <p><strong>Date:</strong> <span th:text="${#temporals.format(event.eventDate, 'EEEE, d MMM yyyy • h:mm a')}"></span></p>
+                <p><strong>Venue:</strong> <span th:text="*{venue}"></span></p>
+                <p><strong>Share this link:</strong></p>
+                <input type="text" th:value="${'http://localhost:8080/events/' + event.id}" readonly>
+            </div>
+
+            <!-- Share Section -->
+            <div class="share-section">
+                <h3>Share your event</h3>
+                <div class="share-links">
+                    <a href="#" class="share-link twitter" onclick="shareOnTwitter()"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="share-link whatsapp" onclick="shareOnWhatsApp()"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" class="share-link facebook" onclick="shareOnFacebook()"><i class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="/events" class="btn-primary">
+                    <i class="fas fa-calendar-alt"></i> View All Events
+                </a>
+                <a href="/events/host" class="btn-secondary">
+                    <i class="fas fa-plus-circle"></i> Create Another
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h4>EventHub</h4>
+                    <p>Real-time event platform for Chennai. Discover, host, and register for events seamlessly.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="/">Home</a>
+                    <a href="/events">Events</a>
+                    <a href="/events/host">Host Event</a>
+                    <a href="/artists">Artists</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <div class="social">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 EventHub. All rights reserved.</p>
+                <div class="status">
+                    <i class="fas fa-wifi"></i> Connected
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function shareOnTwitter() {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent('Check out this event on EventHub!');
+            window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+        }
+        
+        function shareOnWhatsApp() {
+            const text = encodeURIComponent('Check out this event on EventHub: ' + window.location.href);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+        }
+        
+        function shareOnFacebook() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+        }
+    </script>
+</body>
+</html>
