@@ -7,22 +7,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/employees")
 public class EmployeeController {
     
     @Autowired
     private EmployeeService employeeService;
     
-    @GetMapping
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/employees";
+    }
+    
+    @GetMapping("/employees")
     public String listEmployees(Model model) {
         model.addAttribute("employees", employeeService.getAllEmployees());
         return "employee-list";
     }
     
-    @GetMapping("/{id}")
+    @GetMapping("/employees/{id}")
     public String viewEmployee(@PathVariable Long id, Model model) {
         Employee employee = employeeService.getEmployeeById(id);
         if (employee != null) {
