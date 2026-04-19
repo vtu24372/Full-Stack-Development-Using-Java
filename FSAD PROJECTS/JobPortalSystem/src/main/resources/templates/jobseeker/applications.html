@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications - Job Seeker</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2><i class="fas fa-briefcase"></i> JobPortal</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/jobseeker/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="/jobseeker/profile"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="/jobseeker/jobs"><i class="fas fa-search"></i> Browse Jobs</a></li>
+                <li class="active"><a href="/jobseeker/applications"><i class="fas fa-file-alt"></i> My Applications</a></li>
+                <li><a href="/jobseeker/notifications"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-header">
+                <div class="welcome">
+                    <h1>My Applications</h1>
+                    <p>Track your job application status</p>
+                </div>
+            </div>
+
+            <!-- Status Filter Tabs -->
+            <div class="filter-tabs">
+                <button class="filter-btn active" onclick="filterApplications('all')">All Applications</button>
+                <button class="filter-btn" onclick="filterApplications('PENDING')">Pending</button>
+                <button class="filter-btn" onclick="filterApplications('SHORTLISTED')">Shortlisted</button>
+                <button class="filter-btn" onclick="filterApplications('REJECTED')">Rejected</button>
+            </div>
+
+            <!-- Applications List -->
+            <div class="applications-list" id="applicationsList">
+                <div class="application-card" data-status="PENDING">
+                    <div class="app-header">
+                        <div class="app-info">
+                            <h3>Senior Java Developer</h3>
+                            <p><i class="fas fa-building"></i> Tech Corp India | Bangalore</p>
+                        </div>
+                        <div class="app-status">
+                            <span class="status-badge pending">Pending Review</span>
+                        </div>
+                    </div>
+                    <div class="app-details">
+                        <div class="detail-item">
+                            <label>Applied Date:</label>
+                            <span>January 15, 2024</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Application ID:</label>
+                            <span>#APP-001</span>
+                        </div>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn-withdraw" onclick="withdrawApplication(1)">Withdraw Application</button>
+                    </div>
+                </div>
+
+                <div class="application-card" data-status="SHORTLISTED">
+                    <div class="app-header">
+                        <div class="app-info">
+                            <h3>Frontend Developer</h3>
+                            <p><i class="fas fa-building"></i> Global Solutions | Mumbai</p>
+                        </div>
+                        <div class="app-status">
+                            <span class="status-badge shortlisted">Shortlisted</span>
+                        </div>
+                    </div>
+                    <div class="app-details">
+                        <div class="detail-item">
+                            <label>Applied Date:</label>
+                            <span>January 10, 2024</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Shortlisted Date:</label>
+                            <span>January 18, 2024</span>
+                        </div>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn-message" onclick="contactEmployer()"><i class="fas fa-envelope"></i> Contact Employer</button>
+                    </div>
+                </div>
+
+                <div class="application-card" data-status="REJECTED">
+                    <div class="app-header">
+                        <div class="app-info">
+                            <h3>Data Scientist</h3>
+                            <p><i class="fas fa-building"></i> Innovative Minds | Remote</p>
+                        </div>
+                        <div class="app-status">
+                            <span class="status-badge rejected">Rejected</span>
+                        </div>
+                    </div>
+                    <div class="app-details">
+                        <div class="detail-item">
+                            <label>Applied Date:</label>
+                            <span>January 5, 2024</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Feedback:</label>
+                            <span>Good skills but looking for more experience</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterApplications(status) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const cards = document.querySelectorAll('.application-card');
+            cards.forEach(card => {
+                if (status === 'all' || card.dataset.status === status) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function withdrawApplication(appId) {
+            if (confirm('Are you sure you want to withdraw this application?')) {
+                alert(`Application ${appId} withdrawn successfully`);
+            }
+        }
+
+        function contactEmployer() {
+            alert('Email sent to employer!');
+        }
+    </script>
+</body>
+</html>

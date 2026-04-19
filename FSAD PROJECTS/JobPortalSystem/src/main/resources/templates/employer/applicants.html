@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applicants - Employer Panel</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2><i class="fas fa-briefcase"></i> JobPortal</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/employer/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="/employer/post-job"><i class="fas fa-plus-circle"></i> Post Job</a></li>
+                <li><a href="/employer/my-jobs"><i class="fas fa-briefcase"></i> My Jobs</a></li>
+                <li class="active"><a href="/employer/applicants"><i class="fas fa-users"></i> Applicants</a></li>
+                <li><a href="/employer/analytics"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-header">
+                <div class="welcome">
+                    <h1>Job Applicants</h1>
+                    <p>Review and manage candidate applications</p>
+                </div>
+                <select id="jobSelect" class="job-selector" onchange="filterByJob()">
+                    <option value="all">All Jobs</option>
+                    <option value="1">Senior Java Developer</option>
+                    <option value="2">Frontend Developer</option>
+                    <option value="3">Data Scientist</option>
+                </select>
+            </div>
+
+            <!-- Status Filter Tabs -->
+            <div class="filter-tabs">
+                <button class="filter-btn active" onclick="filterByStatus('all')">All</button>
+                <button class="filter-btn" onclick="filterByStatus('PENDING')">Pending</button>
+                <button class="filter-btn" onclick="filterByStatus('SHORTLISTED')">Shortlisted</button>
+                <button class="filter-btn" onclick="filterByStatus('REJECTED')">Rejected</button>
+            </div>
+
+            <!-- Applicants Cards -->
+            <div class="applicants-grid" id="applicantsGrid">
+                <div class="applicant-card" data-job="1" data-status="PENDING">
+                    <div class="applicant-header">
+                        <div class="applicant-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="applicant-info">
+                            <h3>John Doe</h3>
+                            <p><i class="fas fa-envelope"></i> john@example.com</p>
+                            <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+                        </div>
+                    </div>
+                    <div class="applicant-details">
+                        <p><strong>Experience:</strong> 4 years</p>
+                        <p><strong>Skills:</strong> Java, Spring, MySQL, React</p>
+                        <p><strong>Current CTC:</strong> 10 LPA</p>
+                        <p><strong>Notice Period:</strong> 30 days</p>
+                    </div>
+                    <div class="applicant-actions">
+                        <button class="btn-shortlist" onclick="updateStatus(this, 'SHORTLISTED')">
+                            <i class="fas fa-star"></i> Shortlist
+                        </button>
+                        <button class="btn-reject" onclick="updateStatus(this, 'REJECTED')">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                        <button class="btn-view" onclick="viewResume()">
+                            <i class="fas fa-file-pdf"></i> Resume
+                        </button>
+                    </div>
+                    <div class="applicant-status">
+                        <span class="status-badge pending">Pending Review</span>
+                    </div>
+                </div>
+
+                <div class="applicant-card" data-job="1" data-status="PENDING">
+                    <div class="applicant-header">
+                        <div class="applicant-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="applicant-info">
+                            <h3>Sarah Smith</h3>
+                            <p><i class="fas fa-envelope"></i> sarah@example.com</p>
+                            <p><i class="fas fa-phone"></i> +91 98765 43211</p>
+                        </div>
+                    </div>
+                    <div class="applicant-details">
+                        <p><strong>Experience:</strong> 5 years</p>
+                        <p><strong>Skills:</strong> Python, Django, AWS, PostgreSQL</p>
+                        <p><strong>Current CTC:</strong> 14 LPA</p>
+                        <p><strong>Notice Period:</strong> 15 days</p>
+                    </div>
+                    <div class="applicant-actions">
+                        <button class="btn-shortlist" onclick="updateStatus(this, 'SHORTLISTED')">
+                            <i class="fas fa-star"></i> Shortlist
+                        </button>
+                        <button class="btn-reject" onclick="updateStatus(this, 'REJECTED')">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                        <button class="btn-view" onclick="viewResume()">
+                            <i class="fas fa-file-pdf"></i> Resume
+                        </button>
+                    </div>
+                    <div class="applicant-status">
+                        <span class="status-badge pending">Pending Review</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterByJob() {
+            const selectedJob = document.getElementById('jobSelect').value;
+            const cards = document.querySelectorAll('.applicant-card');
+            cards.forEach(card => {
+                if (selectedJob === 'all' || card.dataset.job === selectedJob) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function filterByStatus(status) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const cards = document.querySelectorAll('.applicant-card');
+            cards.forEach(card => {
+                if (status === 'all' || card.dataset.status === status) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function updateStatus(button, newStatus) {
+            const card = button.closest('.applicant-card');
+            const statusSpan = card.querySelector('.status-badge');
+            
+            card.dataset.status = newStatus;
+            
+            if (newStatus === 'SHORTLISTED') {
+                statusSpan.className = 'status-badge shortlisted';
+                statusSpan.innerHTML = 'Shortlisted <i class="fas fa-check"></i>';
+                alert('Candidate shortlisted successfully!');
+            } else if (newStatus === 'REJECTED') {
+                statusSpan.className = 'status-badge rejected';
+                statusSpan.innerHTML = 'Rejected <i class="fas fa-times"></i>';
+                alert('Candidate rejected');
+            }
+        }
+
+        function viewResume() {
+            alert('Resume download started...');
+        }
+    </script>
+</body>
+</html>

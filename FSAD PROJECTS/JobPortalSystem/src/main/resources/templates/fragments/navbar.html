@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="navbar">
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="/">
+                    <i class="fas fa-briefcase"></i>
+                    <span>JobPortal</span>
+                </a>
+            </div>
+            
+            <div class="nav-menu" id="navMenu">
+                <ul class="nav-links">
+                    <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="/jobseeker/jobs"><i class="fas fa-search"></i> Find Jobs</a></li>
+                    <li><a href="/about"><i class="fas fa-info-circle"></i> About Us</a></li>
+                    <li><a href="/contact"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-auth" th:if="${session.loggedInUser == null}">
+                <a href="/auth/login" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="/auth/register" class="register-btn"><i class="fas fa-user-plus"></i> Register</a>
+            </div>
+            
+            <div class="nav-user" th:if="${session.loggedInUser != null}">
+                <div class="user-dropdown">
+                    <button class="user-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span th:text="${session.userName}">User</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a th:href="${session.userRole == 'JOBSEEKER' ? '/jobseeker/dashboard' : 
+                                      (session.userRole == 'EMPLOYER' ? '/employer/dashboard' : '/admin/dashboard')}">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                        <a th:href="${session.userRole == 'JOBSEEKER' ? '/jobseeker/profile' : 
+                                      (session.userRole == 'EMPLOYER' ? '/employer/my-jobs' : '/admin/users')}">
+                            <i class="fas fa-user"></i> My Account
+                        </a>
+                        <a href="/logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-toggle" id="mobileMenu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <style>
+        .navbar {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-logo a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        
+        .nav-logo i {
+            color: #00D4FF;
+            font-size: 1.8rem;
+        }
+        
+        .nav-logo span {
+            background: linear-gradient(135deg, #00D4FF, #FF6B35);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-links a:hover {
+            color: #00D4FF;
+            transform: translateY(-2px);
+        }
+        
+        .login-btn, .register-btn {
+            padding: 8px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+        
+        .login-btn {
+            border: 2px solid #00D4FF;
+            color: #00D4FF;
+            background: transparent;
+        }
+        
+        .login-btn:hover {
+            background: #00D4FF;
+            color: #0a0e27;
+        }
+        
+        .register-btn {
+            background: linear-gradient(135deg, #FF6B35, #FF8C00);
+            color: white;
+            border: none;
+        }
+        
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+        
+        .user-btn {
+            background: linear-gradient(135deg, #1a1f3a, #0a0e27);
+            border: 1px solid #00D4FF;
+            padding: 8px 20px;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+        
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: #1a1f3a;
+            min-width: 200px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+        
+        .dropdown-content a {
+            color: #e0e0e0;
+            padding: 12px 20px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown-content a:hover {
+            background: rgba(0, 212, 255, 0.1);
+            color: #00D4FF;
+        }
+        
+        .user-dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #00D4FF;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: #1a1f3a;
+                flex-direction: column;
+                padding: 20px;
+                text-align: center;
+                border-top: 1px solid #00D4FF;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (mobileMenu) {
+                mobileMenu.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+</div>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Job Seeker</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2><i class="fas fa-briefcase"></i> JobPortal</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/jobseeker/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="/jobseeker/profile"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="/jobseeker/jobs"><i class="fas fa-search"></i> Browse Jobs</a></li>
+                <li><a href="/jobseeker/applications"><i class="fas fa-file-alt"></i> My Applications</a></li>
+                <li class="active"><a href="/jobseeker/notifications"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-header">
+                <div class="welcome">
+                    <h1>Notifications</h1>
+                    <p>Stay updated with your job application status</p>
+                </div>
+                <button class="mark-all-btn" onclick="markAllRead()"><i class="fas fa-check-double"></i> Mark All as Read</button>
+            </div>
+
+            <!-- Notifications List -->
+            <div class="notifications-container">
+                <div class="notification-item unread">
+                    <div class="notification-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="notification-content">
+                        <h3>Congratulations! You've been shortlisted</h3>
+                        <p>Your application for <strong>Senior Java Developer</strong> at Tech Corp India has been shortlisted.</p>
+                        <div class="notification-meta">
+                            <span><i class="fas fa-clock"></i> 2 hours ago</span>
+                            <a href="/jobseeker/applications" class="view-link">View Application</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-item unread">
+                    <div class="notification-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="notification-content">
+                        <h3>Application Received</h3>
+                        <p>Your application for <strong>Frontend Developer</strong> at Global Solutions has been received.</p>
+                        <div class="notification-meta">
+                            <span><i class="fas fa-clock"></i> 1 day ago</span>
+                            <a href="/jobseeker/applications" class="view-link">View Application</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-item">
+                    <div class="notification-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="notification-content">
+                        <h3>New Job Alert: Data Scientist Position</h3>
+                        <p>Innovative Minds is hiring Data Scientist with 4+ years experience. Apply now!</p>
+                        <div class="notification-meta">
+                            <span><i class="fas fa-clock"></i> 3 days ago</span>
+                            <a href="/jobseeker/jobs" class="view-link">View Job</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-item">
+                    <div class="notification-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="notification-content">
+                        <h3>Profile Viewed by Employer</h3>
+                        <p>Tech Corp India viewed your profile. Keep your profile updated!</p>
+                        <div class="notification-meta">
+                            <span><i class="fas fa-clock"></i> 5 days ago</span>
+                            <a href="/jobseeker/profile" class="view-link">Update Profile</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-item">
+                    <div class="notification-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="notification-content">
+                        <h3>Weekly Job Recommendations</h3>
+                        <p>Check out 5 new job recommendations based on your skills and experience.</p>
+                        <div class="notification-meta">
+                            <span><i class="fas fa-clock"></i> 1 week ago</span>
+                            <a href="/jobseeker/jobs" class="view-link">View Recommendations</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function markAllRead() {
+            const unreadItems = document.querySelectorAll('.notification-item.unread');
+            unreadItems.forEach(item => {
+                item.classList.remove('unread');
+            });
+            alert('All notifications marked as read');
+        }
+    </script>
+</body>
+</html>

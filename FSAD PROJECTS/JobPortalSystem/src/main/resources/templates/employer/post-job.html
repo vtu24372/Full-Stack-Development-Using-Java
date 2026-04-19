@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post New Job - Employer Panel</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2><i class="fas fa-briefcase"></i> JobPortal</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/employer/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li class="active"><a href="/employer/post-job"><i class="fas fa-plus-circle"></i> Post Job</a></li>
+                <li><a href="/employer/my-jobs"><i class="fas fa-briefcase"></i> My Jobs</a></li>
+                <li><a href="/employer/applicants"><i class="fas fa-users"></i> Applicants</a></li>
+                <li><a href="/employer/analytics"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-header">
+                <div class="welcome">
+                    <h1>Post New Job</h1>
+                    <p>Fill in the details to create a job listing</p>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <form action="/employer/save-job" method="post" class="job-form">
+                    <div class="form-group">
+                        <label><i class="fas fa-heading"></i> Job Title *</label>
+                        <input type="text" name="title" placeholder="e.g., Senior Software Engineer" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-align-left"></i> Job Description *</label>
+                        <textarea name="description" rows="5" placeholder="Describe the role, responsibilities, and requirements..." required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> Category *</label>
+                            <select name="category" required>
+                                <option value="">Select Category</option>
+                                <option value="IT">IT & Software</option>
+                                <option value="Marketing">Marketing & Sales</option>
+                                <option value="Finance">Finance & Accounting</option>
+                                <option value="HR">Human Resources</option>
+                                <option value="Design">Design & Creative</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-map-marker-alt"></i> Location *</label>
+                            <input type="text" name="location" placeholder="e.g., Mumbai, Bangalore, Remote" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-chart-line"></i> Experience *</label>
+                            <select name="experience" required>
+                                <option value="">Select Experience</option>
+                                <option value="Fresher">Fresher (0-1 years)</option>
+                                <option value="1-3 years">1-3 years</option>
+                                <option value="3-5 years">3-5 years</option>
+                                <option value="5-8 years">5-8 years</option>
+                                <option value="8+ years">8+ years</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-rupee-sign"></i> Salary *</label>
+                            <input type="text" name="salary" placeholder="e.g., 8-12 LPA" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-code"></i> Required Skills *</label>
+                        <input type="text" name="skills" placeholder="e.g., Java, Spring Boot, MySQL (comma separated)" required>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Post Job</button>
+                        <button type="reset" class="btn-secondary"><i class="fas fa-undo"></i> Reset</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

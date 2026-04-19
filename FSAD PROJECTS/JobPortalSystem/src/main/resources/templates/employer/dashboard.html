@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Dashboard - Job Portal</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2><i class="fas fa-briefcase"></i> JobPortal</h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="active"><a href="/employer/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="/employer/post-job"><i class="fas fa-plus-circle"></i> Post Job</a></li>
+                <li><a href="/employer/my-jobs"><i class="fas fa-briefcase"></i> My Jobs</a></li>
+                <li><a href="/employer/applicants"><i class="fas fa-users"></i> Applicants</a></li>
+                <li><a href="/employer/analytics"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-header">
+                <div class="welcome">
+                    <h1>Employer Dashboard</h1>
+                    <p>Welcome back, <span th:text="${session.companyName}">Tech Corp</span>!</p>
+                </div>
+                <div class="date-time">
+                    <i class="fas fa-calendar"></i>
+                    <span id="currentDate"></span>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 th:text="${totalJobs}">0</h3>
+                        <p>Total Jobs</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 th:text="${totalApplications}">0</h3>
+                        <p>Applications</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon yellow">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 th:text="${shortlistedCount}">0</h3>
+                        <p>Shortlisted</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Jobs -->
+            <div class="recent-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-clock"></i> Recent Job Postings</h2>
+                    <a href="/employer/my-jobs" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="jobs-list">
+                    <div class="job-item" th:each="job : ${recentJobs}">
+                        <div class="job-info">
+                            <h3 th:text="${job.title}">Senior Java Developer</h3>
+                            <p><i class="fas fa-map-marker-alt"></i> <span th:text="${job.location}">Bangalore</span></p>
+                            <p><i class="fas fa-rupee-sign"></i> <span th:text="${job.salary}">15 LPA</span></p>
+                        </div>
+                        <div class="job-stats">
+                            <span class="badge open">Open</span>
+                            <a th:href="'/employer/applicants/' + ${job.id}" class="view-applicants">View Applicants</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const date = new Date();
+        document.getElementById('currentDate').innerHTML = date.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+    </script>
+</body>
+</html>

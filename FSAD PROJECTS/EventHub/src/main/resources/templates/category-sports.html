@@ -532,5 +532,24 @@
             </div>
         </footer>
     </div>
+    
+    <script>
+    // Real-time event sync for category page
+    function refreshCategoryEvents() {
+        fetch(window.location.href)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newEvents = doc.querySelector('#categoryEventsContainer');
+                const currentEvents = document.querySelector('#categoryEventsContainer');
+                if (newEvents && currentEvents) {
+                    currentEvents.innerHTML = newEvents.innerHTML;
+                }
+            })
+            .catch(err => console.log('Sync error:', err));
+    }
+    setInterval(refreshCategoryEvents, 3000);
+</script>
 </body>
 </html>

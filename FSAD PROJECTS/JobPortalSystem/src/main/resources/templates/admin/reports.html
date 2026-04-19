@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Admin Panel</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2><i class="fas fa-briefcase"></i> JobPortal</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/admin/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="/admin/users"><i class="fas fa-users"></i> Manage Users</a></li>
+                <li class="active"><a href="/admin/reports"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-header">
+                <div class="welcome">
+                    <h1>Reports & Analytics</h1>
+                    <p>Platform insights and statistics</p>
+                </div>
+                <button class="export-btn" onclick="exportReport()">
+                    <i class="fas fa-download"></i> Export Report
+                </button>
+            </div>
+
+            <!-- Report Cards -->
+            <div class="report-cards">
+                <div class="report-card">
+                    <i class="fas fa-calendar-week"></i>
+                    <div class="report-info">
+                        <h3>This Month</h3>
+                        <p class="stat-number">+28%</p>
+                        <p>Growth in users</p>
+                    </div>
+                </div>
+                <div class="report-card">
+                    <i class="fas fa-check-circle"></i>
+                    <div class="report-info">
+                        <h3>Placement Rate</h3>
+                        <p class="stat-number">67%</p>
+                        <p>Successful placements</p>
+                    </div>
+                </div>
+                <div class="report-card">
+                    <i class="fas fa-clock"></i>
+                    <div class="report-info">
+                        <h3>Avg Response</h3>
+                        <p class="stat-number">2.4 days</p>
+                        <p>Employer response time</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-line"></i> Monthly Growth</h3>
+                    <canvas id="growthChart" width="400" height="250"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-pie"></i> User Distribution</h3>
+                    <canvas id="distributionChart" width="400" height="250"></canvas>
+                </div>
+            </div>
+
+            <!-- Top Employers Table -->
+            <div class="table-section">
+                <h3><i class="fas fa-trophy"></i> Top Employers</h3>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Company Name</th>
+                                <th>Jobs Posted</th>
+                                <th>Applications</th>
+                                <th>Hires</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>🥇 1</td>
+                                <td>Tech Corp India</td>
+                                <td>45</td>
+                                <td>234</td>
+                                <td>28</td>
+                            </tr>
+                            <tr>
+                                <td>🥈 2</td>
+                                <td>Global Solutions</td>
+                                <td>38</td>
+                                <td>189</td>
+                                <td>22</td>
+                            </tr>
+                            <tr>
+                                <td>🥉 3</td>
+                                <td>Innovative Minds</td>
+                                <td>32</td>
+                                <td>156</td>
+                                <td>18</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Growth Chart
+        const ctx1 = document.getElementById('growthChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Users',
+                    data: [65, 78, 92, 108, 135, 162, 198, 235, 278, 325, 378, 435],
+                    borderColor: '#FF6B35',
+                    backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Jobs',
+                    data: [32, 45, 58, 72, 89, 105, 128, 156, 185, 215, 248, 285],
+                    borderColor: '#00D4FF',
+                    backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#fff' }
+                    }
+                }
+            }
+        });
+
+        // Distribution Chart
+        const ctx2 = document.getElementById('distributionChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: ['Job Seekers (65%)', 'Employers (30%)', 'Admins (5%)'],
+                datasets: [{
+                    data: [65, 30, 5],
+                    backgroundColor: ['#FF6B35', '#00D4FF', '#FFD700'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#fff' }
+                    }
+                }
+            }
+        });
+
+        function exportReport() {
+            alert('Report exported successfully!');
+        }
+    </script>
+</body>
+</html>

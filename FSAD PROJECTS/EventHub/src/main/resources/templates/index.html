@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* YOUR EXISTING CSS - KEPT EXACTLY AS IS */
         * {
             margin: 0;
             padding: 0;
@@ -720,5 +721,24 @@
             </div>
         </footer>
     </div>
+    <!-- ✅ ADDED REAL-TIME SYNC SCRIPT - ONLY THIS ADDED -->
+    <script>
+        // Real-time event sync for home page
+        function refreshEvents() {
+            fetch(window.location.href)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newEvents = doc.querySelector('#featuredEvents');
+                    const currentEvents = document.querySelector('#featuredEvents');
+                    if (newEvents && currentEvents) {
+                        currentEvents.innerHTML = newEvents.innerHTML;
+                    }
+                })
+                .catch(err => console.log('Sync error:', err));
+        }
+        setInterval(refreshEvents, 3000);
+    </script>
 </body>
 </html>
