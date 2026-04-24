@@ -16,6 +16,11 @@ public class ApplicationRepository {
     private static List<Application> applications = new ArrayList<>();
     private static AtomicLong idCounter = new AtomicLong(1);
     
+    static {
+        // Sample applications will be added dynamically when users apply
+        // Applications are created when job seekers click Apply Now
+    }
+    
     public Application save(Application application) {
         if (application.getId() == null) {
             application.setId(idCounter.getAndIncrement());
@@ -81,5 +86,20 @@ public class ApplicationRepository {
     
     public void deleteById(Long id) {
         applications.removeIf(app -> app.getId().equals(id));
+    }
+    
+    // New method to update application status
+    public Application updateStatus(Long id, String status, String feedback) {
+        Optional<Application> appOpt = findById(id);
+        if (appOpt.isPresent()) {
+            Application app = appOpt.get();
+            app.setStatus(status);
+            if (feedback != null) {
+                app.setEmployerFeedback(feedback);
+            }
+            app.setReviewDate(java.time.LocalDateTime.now());
+            return save(app);
+        }
+        return null;
     }
 }

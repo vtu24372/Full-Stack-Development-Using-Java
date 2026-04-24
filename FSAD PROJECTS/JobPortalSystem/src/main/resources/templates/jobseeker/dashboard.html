@@ -30,7 +30,7 @@
             <div class="top-header">
                 <div class="welcome">
                     <h1>Job Seeker Dashboard</h1>
-                    <p>Welcome back, <span th:text="${session.userName}">John Doe</span>!</p>
+                    <p>Welcome back, <span th:text="${user != null ? user.name : 'Guest'}">User</span>!</p>
                 </div>
                 <div class="date-time">
                     <i class="fas fa-calendar"></i>
@@ -78,14 +78,14 @@
                 <div class="jobs-list">
                     <div class="job-item" th:each="job : ${recentJobs}">
                         <div class="job-info">
-                            <h3 th:text="${job.title}">Senior Java Developer</h3>
-                            <p><i class="fas fa-building"></i> <span th:text="${job.employer.companyName}">Tech Corp</span></p>
-                            <p><i class="fas fa-map-marker-alt"></i> <span th:text="${job.location}">Bangalore</span></p>
-                            <p><i class="fas fa-rupee-sign"></i> <span th:text="${job.salary}">15 LPA</span></p>
+                            <h3 th:text="${job.title}">Job Title</h3>
+                            <p><i class="fas fa-building"></i> <span th:text="${job.employer != null ? job.employer.companyName : 'Company'}">Company</span></p>
+                            <p><i class="fas fa-map-marker-alt"></i> <span th:text="${job.location}">Location</span></p>
+                            <p><i class="fas fa-rupee-sign"></i> <span th:text="${job.salary}">Salary</span></p>
                         </div>
                         <div class="job-stats">
-                            <span class="badge">Urgent</span>
-                            <a th:href="'/jobseeker/apply/' + ${job.id}" class="apply-btn">Apply Now</a>
+                            <span class="badge">Open</span>
+                            <a th:href="@{/jobseeker/apply/{jobId}(jobId=${job.id})}" class="apply-btn">Apply Now</a>
                         </div>
                     </div>
                 </div>

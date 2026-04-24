@@ -12,8 +12,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -61,6 +64,43 @@ public class JobSeekerController {
         User currentUser = getCurrentUser();
         model.addAttribute("user", currentUser);
         return "jobseeker/profile";
+    }
+
+    @PostMapping("/update-profile")
+    public String updateProfile(@ModelAttribute User updatedUser,
+                                @RequestParam(value = "resume", required = false) MultipartFile resume,
+                                RedirectAttributes redirectAttributes) {
+        User currentUser = getCurrentUser();
+        
+        currentUser.setName(updatedUser.getName());
+        currentUser.setPhone(updatedUser.getPhone());
+        currentUser.setLocation(updatedUser.getLocation());
+        currentUser.setSkills(updatedUser.getSkills());
+        
+        // Handle resume upload if file is provided
+        if (resume != null && !resume.isEmpty()) {
+            try {
+                String uploadDir = "./uploads/resumes/";
+                File dir = new File(uploadDir);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                String fileName = currentUser.getId() + "_" + resume.getOriginalFilename();
+                String filePath = uploadDir + fileName;
+                resume.transferTo(new File(filePath));
+                currentUser.setResumePath("/uploads/resumes/" + fileName);
+                redirectAttributes.addFlashAttribute("message", "Profile and Resume updated successfully");
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("error", "Failed to upload resume");
+            }
+        }
+        
+        userRepository.save(currentUser);
+        if (resume == null || resume.isEmpty()) {
+            redirectAttributes.addFlashAttribute("message", "Profile updated successfully");
+        }
+        // CHANGED: Redirect to dashboard instead of profile
+        return "redirect:/jobseeker/dashboard";
     }
 
     @GetMapping("/jobs")

@@ -4,6 +4,13 @@ import java.time.LocalDateTime;
 
 public class Application {
     
+    // Status Constants
+    public static final String STATUS_PENDING = "PENDING";
+    public static final String STATUS_SHORTLISTED = "SHORTLISTED";
+    public static final String STATUS_REJECTED = "REJECTED";
+    public static final String STATUS_HIRED = "HIRED";
+    public static final String STATUS_INTERVIEW = "INTERVIEW";
+    
     private Long id;
     private Job job;
     private User jobSeeker;
@@ -15,7 +22,7 @@ public class Application {
     private String employerFeedback;
     
     public Application() {
-        this.status = "PENDING";
+        this.status = STATUS_PENDING;
         this.appliedDate = LocalDateTime.now();
     }
     
@@ -24,7 +31,7 @@ public class Application {
         this.jobSeeker = jobSeeker;
         this.coverLetter = coverLetter;
         this.resumePath = resumePath;
-        this.status = "PENDING";
+        this.status = STATUS_PENDING;
         this.appliedDate = LocalDateTime.now();
     }
     

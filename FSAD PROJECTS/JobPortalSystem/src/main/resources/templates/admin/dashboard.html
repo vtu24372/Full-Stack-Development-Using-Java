@@ -25,11 +25,10 @@
 
         <!-- Main Content -->
         <div class="main-content">
-            <!-- Top Header -->
             <div class="top-header">
                 <div class="welcome">
                     <h1>Admin Dashboard</h1>
-                    <p>Welcome back, <span th:text="${session.userName}">Admin</span>!</p>
+                    <p>Welcome back, Admin!</p>
                 </div>
                 <div class="date-time">
                     <i class="fas fa-calendar"></i>
@@ -95,7 +94,7 @@
                 </div>
             </div>
 
-            <!-- Recent Activity -->
+            <!-- Charts -->
             <div class="recent-section">
                 <div class="section-header">
                     <h2><i class="fas fa-chart-line"></i> Platform Overview</h2>
@@ -116,7 +115,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Current Date
         const date = new Date();
         document.getElementById('currentDate').innerHTML = date.toLocaleDateString('en-US', { 
             weekday: 'long', 
@@ -125,7 +123,6 @@
             day: 'numeric' 
         });
 
-        // User Chart
         const ctx1 = document.getElementById('userChart').getContext('2d');
         new Chart(ctx1, {
             type: 'line',
@@ -142,14 +139,11 @@
             options: {
                 responsive: true,
                 plugins: {
-                    legend: {
-                        labels: { color: '#fff' }
-                    }
+                    legend: { labels: { color: '#fff' } }
                 }
             }
         });
 
-        // Job Chart
         const ctx2 = document.getElementById('jobChart').getContext('2d');
         new Chart(ctx2, {
             type: 'bar',
@@ -165,9 +159,7 @@
             options: {
                 responsive: true,
                 plugins: {
-                    legend: {
-                        labels: { color: '#fff' }
-                    }
+                    legend: { labels: { color: '#fff' } }
                 }
             }
         });
